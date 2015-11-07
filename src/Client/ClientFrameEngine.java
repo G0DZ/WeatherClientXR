@@ -22,13 +22,21 @@ public class ClientFrameEngine implements ActionListener{
         // Если это кнопка "Ввод исходных данных"
         String actioncommand = clickedButton.getActionCommand();
         if (actioncommand.equals(ClientFrame.button_start.getText())){
-            cityID = parent.textField.getText();
-            if(!cityID.equals("")){
-                synchronized (new XRConnect(cityID, this)){} //синхронизированный поток для расчета информации
+            String city = parent.comboBox.getSelectedItem().toString();
+            if (city != null) {
+                cityID = parent.A.get(city).toString();
+                if (cityID != null && !cityID.equals("")) {
+                    synchronized (new XRConnect(cityID, this)) {
+                    } //синхронизированный поток для расчета информации
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Город не найден!\nПовторите ввод.");
+                }
             }
             else{
-                JOptionPane.showMessageDialog(null, "Строка ввода города пуста!");
+                JOptionPane.showMessageDialog(null, "Строка ввода города пуста!\nПовторите ввод.");
             }
+
         }
     }
 

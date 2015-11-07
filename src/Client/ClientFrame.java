@@ -1,11 +1,16 @@
 package Client;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.TreeMap;
 
 public class ClientFrame extends JFrame {
+    TreeMap<String, Integer> A;
     private static final long serialVersionUID = 5506524279338381258L;
     //будем описывать используемые элементы сверху-вниз
+    JComboBox comboBox;
     JLabel helloTextLabel;
     JLabel cityName;
     JLabel todayText;
@@ -16,10 +21,10 @@ public class ClientFrame extends JFrame {
     JLabel weatherTypeText;
     JLabel windText;
     JPanel weatherSquare;
-    JPanel p1, p2, p3, p4, p5, p6;
-
+    JPanel p1, p2, p3, p4, p5, p6, p7;
     JTextField textField;
     JTextArea TEST_WeatherText; //вывод погоды в текстовом виде
+
     static JButton button_start;	//кнопка обновления погоды
     static String button_start_txt = "Обновить";
 
@@ -55,6 +60,21 @@ public class ClientFrame extends JFrame {
         TEST_WeatherText.setEnabled(false);
         TEST_WeatherText.setFont(new Font("Calibri", Font.PLAIN, 16));
 
+        //получение информации для комбобокса
+        A = CityReader.getCities();
+        String[] comboStr = new String[A.size()];
+        int i = 0;
+        for (String key : A.keySet()) {
+            comboStr[i++]= key;
+        }
+        //подключение нового комбобокса с фукнцией поиска
+        //http://www.orbital-computer.de/JComboBox/
+        comboBox = new JComboBox(comboStr);
+        comboBox.setEditable(true);
+        // get the combo boxes editor component
+        JTextComponent editor = (JTextComponent) comboBox.getEditor().getEditorComponent();
+        // change the editor's document
+        editor.setDocument(new JComboPopUp(comboBox));
 
         //устанавливаем размер элементов
         helloTextLabel.setBounds(10, 0, 145, 20);
@@ -67,7 +87,8 @@ public class ClientFrame extends JFrame {
         weatherImage.setBounds(20, 60, 48, 48);
         weatherTypeText.setBounds(80, 65, 200, 30);
         TEST_WeatherText.setBounds(0, 90, 300, 250);
-        textField.setBounds(50, 325, 200, 20);
+        //textField.setBounds(50, 325, 200, 20);
+        comboBox.setBounds(50, 325, 200, 20);
         button_start.setBounds(50, 350, 200, 30);
 
 
@@ -91,6 +112,7 @@ public class ClientFrame extends JFrame {
         p4 = new JPanel();
         p5 = new JPanel();
         p6 = new JPanel();
+        p7 = new JPanel();
         // Задаем layout для каждой из трех панелей
         BorderLayout bl1= new BorderLayout();
         FlowLayout fl2 = new FlowLayout();
@@ -98,12 +120,14 @@ public class ClientFrame extends JFrame {
         FlowLayout fl4 = new FlowLayout();
         BorderLayout bl5= new BorderLayout();
         FlowLayout fl6 = new FlowLayout();
+        FlowLayout fl7 = new FlowLayout();
         p1.setLayout(bl1);
         p2.setLayout(fl2);
         p3.setLayout(fl3);
         p4.setLayout(fl4);
         p5.setLayout(bl5);
         p6.setLayout(fl6);
+        p7.setLayout(fl7);
 
         p2.add(helloTextLabel);
         p2.add(cityName);
@@ -113,21 +137,25 @@ public class ClientFrame extends JFrame {
         p3.add(weatherTypeText);
         p3.add(windText);
 
-        p4.add(nowLabel);
-        p4.add(timeLabel);
-        p4.add(textField);
+        p4.add(comboBox);
+        //p4.add(textField);
         p4.add(button_start);
 
+
         p6.add(weatherImage);
+        p7.add(nowLabel);
+        p7.add(timeLabel);
+
         p5.add(p3, BorderLayout.NORTH);
         p5.add(p6, BorderLayout.CENTER);
+        p5.add(p7, BorderLayout.SOUTH);
 
         p1.add(p2, BorderLayout.NORTH);
         p1.add(p5, BorderLayout.CENTER);
         p1.add(p4, BorderLayout.SOUTH);
 
         getContentPane().add(p1);
-        setPreferredSize(new Dimension(450, 170));
+        setPreferredSize(new Dimension(450, 220));
 
         this.pack();
         this.setTitle("YWeather");									//Заголовок окна
