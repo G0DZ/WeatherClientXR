@@ -8,14 +8,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Vector;
 
-/**
- * Created by L8p on 07.11.2015.
- */
 public class XRConnect implements Runnable {
     static String serverIP = "127.0.0.1";
     static int serverPort = 9876;
     static int cityID = 0;
-    private Weather clientWeather = null;
     private ClientFrameEngine parent;
     private Thread t;
 
